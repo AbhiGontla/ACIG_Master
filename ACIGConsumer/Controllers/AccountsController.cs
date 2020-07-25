@@ -44,7 +44,7 @@ namespace ACIGConsumer.Controllers
         public async Task<IActionResult> VerifyDetails(string nid, string dob)
         {
             ViewBag.lang = langcode;
-            if (nid != null && dob != null)
+            if (!string.IsNullOrWhiteSpace(nid) && !string.IsNullOrWhiteSpace(dob))
             {
                 try
                 {
@@ -59,7 +59,6 @@ namespace ACIGConsumer.Controllers
 
                         RegistrationResponse res = await CustomerHandler.GetMemberByNationalId(clsInput);
                         _logger.LogInformation(_className + "::VerifyDetails::GetMemberByNationalId::Response::" + res.ResponseMessage );
-                        _logger.LogInformation(_className + "::VerifyDetails::GetMemberByNationalId::MemberCount::" + res.Members.Count);
                         if (res.Members != null && res.Members.Count > 0)
                         {
                             Registration _userdetails = new Registration();
@@ -73,11 +72,11 @@ namespace ACIGConsumer.Controllers
                             var responseMessage = string.Empty;
                             if(res.Errors != null && res.Errors.Count > 0)
                             {
-                                responseMessage = "Invalid inpud.";
+                                responseMessage = "Invalid National ID or Date of Birth.Please check again.";
                             }
                             else
                             {
-                                responseMessage = "No Members found with the national Id.";
+                                responseMessage = res.ResponseMessage;
                             }
                             return Json(new { success = false, responseText = responseMessage });
                         }
@@ -188,7 +187,6 @@ namespace ACIGConsumer.Controllers
                     }
                     await _authService.SignIn(EmpMember);
                     TempData["NationalId"] = nationalId;
-                    DateTime dt = Convert.ToDateTime(dateofbirth);
                     TempData["YOB"] = dateofbirth;
                     TempData.Keep("YOB");
                     TempData.Keep("NationalId");

@@ -144,21 +144,7 @@ namespace ACIG_Services.Controllers
             var cust = _customerService.GetCustomerById("2332978820");
             return cust;
         }
-        [Route("GetCustomerById")]
-        [HttpGet]
-        public Registration GetCustomerById(string nationalId,string dob)
-        {
-            try
-            {
-                var customer = _customerService.GetRegistrationByNationalId(nationalId, dob);
-                return customer;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation(_className + "::GetCustomerById::" + ex.Message);
-            }
-            return null;
-        }
+
         private static List<Approvals> GetApprovData(List<Approvals> approvals, ClsInput clsInput)
         {
             List<Approvals> _app;
@@ -2056,7 +2042,7 @@ namespace ACIG_Services.Controllers
                 var httpClient = new HttpClient(handler)
                 {
                     BaseAddress = new Uri(url),
-                    Timeout = new TimeSpan(0, 2, 0)
+                    Timeout = new TimeSpan(0, 10, 0)
                 };
 
                 httpClient.DefaultRequestHeaders.Add("ContentType", "application/json");
@@ -2113,7 +2099,6 @@ namespace ACIG_Services.Controllers
             {
                 _logger.LogInformation(_className + "::GetMemberByNationalId::YearOfBirth::BeforeCheck" + clsInput.yearOfBirth);
                 var userexist = _customerService.CheckIfUserExists(clsInput.nationalID, clsInput.yearOfBirth);
-                _logger.LogInformation(_className + "::GetMemberByNationalId::YearOfBirth::AfterCheck" + clsInput.yearOfBirth);
                 _logger.LogInformation(_className + "::GetMemberByNationalId::START");
                 if (userexist != true)
                 {
@@ -2124,7 +2109,7 @@ namespace ACIG_Services.Controllers
                     var httpClient = new HttpClient(handler)
                     {
                         BaseAddress = new Uri("http://130.90.4.130/PolicyEnquiryAPIUAT/api/Policy/RegistrationReq"),
-                        Timeout = new TimeSpan(0, 2, 0)
+                        Timeout = new TimeSpan(0, 10, 0)
                     };
 
                     httpClient.DefaultRequestHeaders.Add("ContentType", "application/json");

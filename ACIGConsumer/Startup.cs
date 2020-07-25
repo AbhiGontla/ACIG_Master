@@ -61,7 +61,7 @@ namespace ACIGConsumer
             });
 
             services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+                options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
             });
 
         }

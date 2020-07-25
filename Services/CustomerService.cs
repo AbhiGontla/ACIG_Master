@@ -322,7 +322,10 @@ namespace Services
         }
         public List<Registration> GetAllCustomers()
         {
-            return _unitOfWorks.RegistrationRepository.GetDbSet().ToList();
+            var q = _unitOfWorks.RegistrationRepository.GetDbSet();
+            if (q != null)
+                return q.ToList();
+            else return new List<Registration>();
         }
         #region TOB
 
@@ -491,8 +494,6 @@ namespace Services
             bool status = true;
             try
             {
-                DateTime dat = Convert.ToDateTime(dob);
-                string dt = dat.ToString("yyyy-MM-dd");
                 var usersList = _unitOfWorks.RegistrationRepository.GetDbSet();
                 var userdetails = usersList.Where(c => (c.Iqama_NationalID == nid));
                 if (dob != null)
@@ -510,19 +511,9 @@ namespace Services
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                status = false;
             }
             return status;
-        }
-        public Registration GetRegistrationByNationalId(string nationalId, string dob = null)
-        {
-            var customers = _unitOfWorks.RegistrationRepository.GetAll();
-            customers = customers.Where(r => r.Iqama_NationalID.Equals(nationalId));
-            if (dob != null)
-            {
-                customers = customers.Where(r => r.DOB.Equals(dob));
-            }
-            return customers.FirstOrDefault();
         }
     }
 }

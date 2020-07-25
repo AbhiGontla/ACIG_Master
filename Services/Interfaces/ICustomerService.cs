@@ -69,6 +69,5 @@ namespace Services.Interfaces
         public void Insert(Policies policies);
         bool CheckIfUserExists(string nid, string dob = null);
         void InsertRelations(Relations relation);
-        Registration GetRegistrationByNationalId(string nationalId, string dob = null);
     }
 }

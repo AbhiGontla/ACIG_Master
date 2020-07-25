@@ -48,10 +48,12 @@ namespace ACIGConsumer.Controllers
             ViewBag.lang = langcode;
             var _paidclaims = GetPaidClaimsById();
 
-            var _osClaims = GetOSClaimsById();
+            //var _osClaims = GetOSClaimsById();
             var claimsResponse = new ClaimsResponse();
-            claimsResponse.OSClaims = _osClaims;
-            claimsResponse.PaidClaims = _paidclaims.OrderByDescending(c => c.POLICY_INC).ToList();
+            //if(_osClaims != null)
+            //    claimsResponse.OSClaims = _osClaims;
+            if(_paidclaims != null)
+                claimsResponse.PaidClaims = _paidclaims.OrderByDescending(c => c.POLICY_INC).ToList();
             return View(claimsResponse);
         }
 
@@ -185,6 +187,7 @@ namespace ACIGConsumer.Controllers
             ViewBag.lang = langcode;
             var _osClaims = GetOSClaimsById();
             var claimsResponse = new ClaimsResponse();
+            if(_osClaims != null)
             claimsResponse.OSClaims = _osClaims.OrderByDescending(c => c.POLICY_INC).ToList();
             return View(claimsResponse);
         }
@@ -206,7 +209,7 @@ namespace ACIGConsumer.Controllers
                     var clsInput = new ClsInput();
                     clsInput.code = "";
                     clsInput.nationalID = nationalId;
-                    DateTime date = Convert.ToDateTime(yob);
+                    DateTime date = DateTime.ParseExact(yob, "dd-MM-yyyy", null);
                     clsInput.yearOfBirth = date.Year.ToString();
                     clsInput.insPolicyNo = "";
                     result = await _claimsHandler.GetPaidClaimsByNationalId(clsInput);
